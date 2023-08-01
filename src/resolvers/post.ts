@@ -1,6 +1,7 @@
 import { Post } from "../entities/Post";
 import { MyContext } from "src/types";
 import { Resolver, Query, Ctx, Arg, Int, Mutation } from "type-graphql";
+import { RequiredEntityData } from "@mikro-orm/core";
 
 @Resolver()
 export class PostResolver {
@@ -22,7 +23,7 @@ export class PostResolver {
     @Arg("title") title: string,
     @Ctx() { em }: MyContext
   ): Promise<Post | null> {
-    const post = em.fork().create(Post, { title });
+    const post = em.fork().create(Post, { title } as RequiredEntityData<Post>);
     await em.fork().persistAndFlush(post);
     return post;
   }
